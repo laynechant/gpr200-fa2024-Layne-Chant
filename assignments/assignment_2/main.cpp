@@ -33,10 +33,6 @@ int main() {
 		//X      Y    Z     
 	   0.5f,  0.5f, 0.0f, // top right
 	   0.5f, -0.5f, 0.0f, // bottom right
-	  -0.5f,  0.5f, 0.0f, // top left
-
-		// The second triangle
-		0.5f, -0.5f, 0.0f, // bottom right
 	   -0.5f, -0.5f, 0.0f, // bottom left
 	   -0.5f,  0.5f, 0.0f, // top left
 	};
@@ -88,12 +84,12 @@ int main() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Position (XYZ)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	// Color RGBA
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(sizeof(float) * 3));
-	glEnableVertexAttribArray(1);
+	/*glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void*)(sizeof(float) * 3));
+	glEnableVertexAttribArray(1);*/
 
 
 	// creates the shader object

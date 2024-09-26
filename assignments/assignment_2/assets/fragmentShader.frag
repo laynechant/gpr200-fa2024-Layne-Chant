@@ -7,6 +7,6 @@ uniform float uTime;
 
 void main()
 {
-	FragColor = ourColor * abs(sin(uTime));
+	FragColor = ourColor;
 };
 
