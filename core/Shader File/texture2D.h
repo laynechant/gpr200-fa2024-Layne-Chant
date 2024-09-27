@@ -11,9 +11,10 @@ namespace shaderFile
 	class Texture2D 
 	{
 		public: 
-			Texture2D(const char* filePath, int filterMode, int warpMode);
+			Texture2D(const char* filePath, int filterMode, int wrapMode);
 			~Texture2D();
-		//	voidBind(unsigned int slot = 0);
+			unsigned int GetID();
+			void Bind(unsigned int slot = 0);
 		// Bind to a specific texture unit
 		private: 
 			unsigned int m_id; // GL texture handle
