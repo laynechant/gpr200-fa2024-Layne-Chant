@@ -6,18 +6,13 @@ namespace shaderFile
 {
 	shaderFile::Texture2D::Texture2D(const char* filePath, int filterMode, int wrapMode)
 	{
-		int width, height, nrChannels; 
+		
 		
 		float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
-
-		data = stbi_load(filePath, &width, &height, &nrChannels, 0);
-
-
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
 
 		unsigned int texture;
 		glGenTextures(1, &texture);
-		glActiveTexture(texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		
 
@@ -26,7 +21,8 @@ namespace shaderFile
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	
+		int width, height, nrChannels;
+		unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
 		if (data) {
 
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -36,15 +32,17 @@ namespace shaderFile
 		}
 		else
 		{
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			std::cout << "Failed to load texture" << std::endl;
 		}
 		
-		stbi_image_free(data);
+		
 
 		m_width = width;
 		m_height = height;
 		m_id = texture;
 
+		stbi_image_free(data);
 	}
 
 	Texture2D::~Texture2D()

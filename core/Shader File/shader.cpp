@@ -62,7 +62,7 @@ namespace shaderFile
 			if (!success)
 			{
 				glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-				printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s", infoLog);
+				printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s", infoLog);
 			}
 
 			// Create shader program, link

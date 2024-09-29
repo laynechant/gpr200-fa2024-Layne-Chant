@@ -15,10 +15,8 @@ namespace shaderFile
 			~Texture2D();
 			unsigned int GetID();
 			void Bind(unsigned int slot = 0);
-		// Bind to a specific texture unit
 		private: 
-			unsigned int m_id; // GL texture handle
-			unsigned char* data; 
+			unsigned int m_id; // GL texture handle 
 			int m_width, m_height; 
 	};
 }

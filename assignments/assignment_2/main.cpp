@@ -5,8 +5,10 @@
 #include <ew/ewMath/ewMath.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+
 #include <Shader File/shader.h>
 #include <Shader File/texture2D.h>
+#include <ew/external/stb_image.h>
 
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
@@ -49,8 +51,6 @@ int main() {
 	unsigned int EBO; 
 	glGenBuffers(1, &EBO);
 
-	
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	unsigned int VBO; 
 	glGenBuffers(1, &VBO);
@@ -80,20 +80,28 @@ int main() {
 	glEnableVertexAttribArray(2);
 
 
-	// creates the shader object
-	shaderFile::Shader shader("assets/vertexShader.vert", "assets/fragmentShader.frag");
-	shaderFile::Shader bgShader("assets/backgroundVertexShader.vert", "assets/backgroundFragmentShader.frag");
-
 	shaderFile::Texture2D bg("assets/wall.jpg", GL_LINEAR, GL_REPEAT);
 	unsigned int bgTexture = bg.GetID();
 
 	shaderFile::Texture2D coin("assets/coinPerson.png", GL_NEAREST, GL_CLAMP_TO_EDGE);
 	unsigned int coinPerson = coin.GetID();
 
+	// creates the shader object
+	shaderFile::Shader shader("assets/vertexShader.vert", "assets/fragmentShader.frag");
+	shaderFile::Shader bgShader("assets/backgroundVertexShader.vert", "assets/backgroundFragmentShader.frag");
+
+
 	
 	int bgTimeLocation = glGetUniformLocation(bgShader.ID, "uTime");
-	int bgFirstTexture = glGetUniformLocation(bgShader.ID, "uTexture");
-	int coinTexture = glGetUniformLocation(shader.ID, "uTexture2");
+	int coinTexture = glGetUniformLocation(shader.ID, "ourTexture");
+
+	bgShader.use();
+	
+	bgShader.setInt("uTexture", bgTexture);
+
+	shader.use();
+	shader.setInt("ourTexture", coinPerson);
+
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
@@ -101,30 +109,38 @@ int main() {
 		glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+
+
+		shader.use();
+		glActiveTexture(GL_TEXTURE0 + 0);
+		glBindTexture(GL_TEXTURE_2D, coinPerson);
+		
+
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		
+		bgShader.use();
+
 		// update the time
 		float time = (float)glfwGetTime();
+		glUniform1f(bgTimeLocation, time);
 
-		bgShader.use();
-		//glUniform1f(bgTimeLocation, time);
-		glUniform1i(bgFirstTexture, bgTexture);
-		
+
 		glActiveTexture(GL_TEXTURE0 + 3);
 		glBindTexture(GL_TEXTURE_2D, bgTexture);
-		
-		/*glActiveTexture(GL_TEXTURE0 + 0);
-		glBindVertexArray(VAO);*/
-		glDrawElements(GL_TRIANGLES,24, GL_UNSIGNED_INT, 0);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		shader.use();
-		glUniform1f(coinTexture, coinPerson);
-		glActiveTexture(GL_TEXTURE1 + 0);
-		glBindTexture(GL_TEXTURE_2D, coinPerson);
-		// DRAW CALL
+				glBindVertexArray(VAO);
+		 //DRAW CALL
 		glBindVertexArray(VAO);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+
 
 		// Drawing happens here
 		glfwSwapBuffers(window);
