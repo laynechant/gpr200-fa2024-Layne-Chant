@@ -46,7 +46,6 @@ int main() {
 		1,2,3  // second triangle
 	};
 
-
 	//Initialization goes here!
 	unsigned int EBO; 
 	glGenBuffers(1, &EBO);
@@ -76,7 +75,7 @@ int main() {
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 
@@ -93,54 +92,42 @@ int main() {
 
 	
 	int bgTimeLocation = glGetUniformLocation(bgShader.ID, "uTime");
+	int coinTimeLocation = glGetUniformLocation(shader.ID, "uTime");
 	int coinTexture = glGetUniformLocation(shader.ID, "ourTexture");
 
-	bgShader.use();
-	
-	bgShader.setInt("uTexture", bgTexture);
-
-	shader.use();
-	shader.setInt("ourTexture", coinPerson);
 
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
 		//Clear framebuffer
-		glClearColor(0.0f, 0.5f, 0.0f, 1.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-
-
-		shader.use();
-		glActiveTexture(GL_TEXTURE0 + 0);
-		glBindTexture(GL_TEXTURE_2D, coinPerson);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, bgTexture);
 		
 
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-
+		bgShader.use();
+		bgShader.setInt("uTexture", 0);
+		
+		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
-		bgShader.use();
-
 		// update the time
 		float time = (float)glfwGetTime();
 		glUniform1f(bgTimeLocation, time);
 
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, coinPerson);
+		
 
-		glActiveTexture(GL_TEXTURE0 + 3);
-		glBindTexture(GL_TEXTURE_2D, bgTexture);
-
+		shader.use();
+		shader.setInt("ourTexture", 2);
+		glUniform1f(coinTimeLocation, time);
+		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-				glBindVertexArray(VAO);
-		 //DRAW CALL
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-
+		
 
 		// Drawing happens here
 		glfwSwapBuffers(window);

@@ -12,7 +12,7 @@ out vec2 TexCoord;
 void main()
 {
 	vec3 pos = aPos;
-	//pos.y += sin((uTime * 4) + pos.x) * 0.2;
+	
 	gl_Position = vec4(aPos, 1.0); // see how we directly give a vec3 to vec4's constructor
 	ourColor = aColor; // set ourColor to the input color we got from the vertex data
 	TexCoord = aTexCoord; 
