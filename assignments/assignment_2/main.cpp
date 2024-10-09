@@ -92,7 +92,6 @@ int main() {
 
 	
 	int bgTimeLocation = glGetUniformLocation(bgShader.ID, "uTime");
-	int coinTimeLocation = glGetUniformLocation(shader.ID, "uTime");
 	int coinTexture = glGetUniformLocation(shader.ID, "ourTexture");
 
 
@@ -123,7 +122,7 @@ int main() {
 
 		shader.use();
 		shader.setInt("ourTexture", 2);
-		glUniform1f(coinTimeLocation, time);
+		
 		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
