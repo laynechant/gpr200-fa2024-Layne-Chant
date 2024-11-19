@@ -9,6 +9,7 @@ namespace ShaderFile
 	Model::Model(string const &path, bool gamma)
 	{
 		loadModel(path);
+		
 	}
 
 	void Model::draw(shaderFile::Shader &shader)
@@ -22,7 +23,7 @@ namespace ShaderFile
 	void Model::loadModel(string const &path)
 	{
 		Assimp::Importer importer; 
-		const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+		const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
@@ -77,8 +78,7 @@ namespace ShaderFile
 				glm::vec2 vec;
 				vec.x = mesh->mTextureCoords[0][i].x;
 				vec.y = mesh->mTextureCoords[0][i].y;
-				// figure out why this wont work
-				//vertex.TexCoords = vec;
+				vertex.TexCoords = vec;
 				// tangent
 				vector.x = mesh->mTangents[i].x;
 				vector.y = mesh->mTangents[i].y;
@@ -91,10 +91,8 @@ namespace ShaderFile
 				vertex.Bitangent = vector;
 			}
 			else
-				//figure out why this wont work
-				//vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+				vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 			// process vertex positions, normals and texture cordinates
-
 			vertices.push_back(vertex);
 		}
 
@@ -208,6 +206,4 @@ namespace ShaderFile
 		}
 		return textureID;
 	}
-
-
 }

@@ -3,7 +3,10 @@
 #include <imgui_impl_opengl3.h>
 
 #include <stdio.h>
+#include <iostream>
+#include <fstream>
 #include <math.h>
+
 
 #include <ew/external/glad.h>
 #include <ew/ewMath/ewMath.h>
@@ -16,6 +19,9 @@
 #include <Shader File/shader.h>
 #include <Shader File/texture2D.h>
 #include <Shader File/camera.h>
+#include <Shader File/model.h>
+
+using namespace std; 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow  *window);
@@ -138,16 +144,16 @@ int main() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	// Position (XYZ)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	//// Position (XYZ)
+	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	//glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	//glEnableVertexAttribArray(1);
 
-	// Color RGBA
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	//// Color RGBA
+	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	//glEnableVertexAttribArray(2);
 
 	shaderFile::Texture2D brick("assets/wall.jpg", GL_LINEAR, GL_REPEAT);
 	unsigned int brickTexture = brick.GetID();
@@ -155,6 +161,10 @@ int main() {
 	// creates the shader object
 	shaderFile::Shader brickShader("assets/vertexShader.vert", "assets/fragmentShader.frag");
 	shaderFile::Shader lightShader("assets/vertexShaderLight.vert", "assets/fragmentShaderLight.frag");
+
+	shaderFile::Shader ourShader("assets/modelLoading.vert", "assets/modelLoading.frag");
+
+	ShaderFile::Model backpackModel("assets/backpack.obj");
 	
 	// defining the projection matrix
 	glm::mat4 projection;
@@ -200,8 +210,8 @@ int main() {
 		brickShader.setVec3("lightPos", lightPosition);
 		brickShader.setVec3("lightColor", lightColor);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, brickTexture);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, brickTexture);
 
 		glm::mat4 view = camera.GetViewMatrix();
 		brickShader.setMat4("view", view);
@@ -221,7 +231,7 @@ int main() {
 		brickShader.setMat4("projection", projection);
 
 		// DRAW CALL
-		glBindVertexArray(VAO);
+		glBindVertexArray(VAO);/*
 		for (unsigned int i = 0; i < 20; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
@@ -230,12 +240,14 @@ int main() {
 			 
 			brickShader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		}*/
 
 		lightShader.use();
 		lightShader.setMat4("projection", projection);
 		lightShader.setMat4("view", view);
 		lightShader.setVec3("ourColor", lightColor);
+
+		
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPosition);
@@ -246,9 +258,19 @@ int main() {
 		lightShader.setVec3("lightPos", lightPosition);
 		lightShader.setVec3("lightColor", lightColor);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		ourShader.use();/*
+		ourShader.setMat4("projection", projection);
+		ourShader.setMat4("view", view);*/
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glm::mat4 model2 = glm::mat4(1.0f);
+		model2 = glm::translate(model2, glm::vec3(0.0f, 0.0f, 0.0f));
+		model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));
+		ourShader.setMat4("model2", model);
+
+		backpackModel.draw(ourShader);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 

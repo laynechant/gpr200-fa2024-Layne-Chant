@@ -1,11 +1,7 @@
 #include "mesh.h"
 
-
-
 namespace ShaderFile
 {
-	
-
 	Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
 	{
 		// sets the mesh public vars to the mesh constructor arguments
@@ -90,6 +86,4 @@ namespace ShaderFile
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 		glBindVertexArray(0);
 	}
-
-	
 }

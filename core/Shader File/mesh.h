@@ -18,7 +18,7 @@ namespace ShaderFile
 	{
 		glm::vec3 Position;
 		glm::vec3 Normal;
-		glm::vec3 TexCoords;
+		glm::vec2 TexCoords;
 		glm::vec3 Tangent;
 		glm::vec3 Bitangent;
 	};
@@ -42,9 +42,7 @@ namespace ShaderFile
 		void Draw(shaderFile::Shader &shader);
 	private:
 		unsigned int VBO, EBO; 
-
 		void setupMesh();
-
 	};
 }
 
