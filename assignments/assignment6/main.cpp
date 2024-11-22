@@ -7,7 +7,6 @@
 #include <fstream>
 #include <math.h>
 
-
 #include <ew/external/glad.h>
 #include <ew/ewMath/ewMath.h>
 #include <ew/external/stb_image.h>
@@ -144,16 +143,18 @@ int main() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	//// Position (XYZ)
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(0);
+	// Position (XYZ)
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
-	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	//glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
-	//// Color RGBA
-	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glEnableVertexAttribArray(2);
+	 //Color RGBA
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
+	//glEnable(GL_TEXTURE_2D);
 
 	shaderFile::Texture2D brick("assets/wall.jpg", GL_LINEAR, GL_REPEAT);
 	unsigned int brickTexture = brick.GetID();
@@ -164,12 +165,15 @@ int main() {
 
 	shaderFile::Shader ourShader("assets/modelLoading.vert", "assets/modelLoading.frag");
 
+	stbi_set_flip_vertically_on_load(true);
+
 	ShaderFile::Model backpackModel("assets/backpack.obj");
 	
 	// defining the projection matrix
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
+	
 	int timeLocation = glGetUniformLocation(brickShader.ID, "uTime");
 	int ambientLocation = glGetUniformLocation(brickShader.ID, "ambientStrength");
 	int diffLocation = glGetUniformLocation(brickShader.ID, "diffStrength"); 
@@ -214,24 +218,44 @@ int main() {
 		//glBindTexture(GL_TEXTURE_2D, brickTexture);
 
 		glm::mat4 view = camera.GetViewMatrix();
-		brickShader.setMat4("view", view);
+		//brickShader.setMat4("view", view);
 
+		
+		ourShader.use();
 		// creats the transforms 
 		glm::mat4 projection = glm::mat4(1.0f);
 
 		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
+		
+
+		ourShader.setMat4("prjection", projection);
+		//glm::mat4 view = camera.GetViewMatrix();
+		ourShader.setMat4("view", view);
+
+		glm::mat4 model2 = glm::mat4(1.0f);
+		model2 = glm::translate(model2, glm::vec3(0.0f, 0.0f, 0.0f));
+		model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));
+		ourShader.setMat4("model2", model2);
+
+		backpackModel.draw(ourShader);
+
+		glm::mat4 modelProjection;
+		modelProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+
+		
 	
-		// gets the matrix uniform locations
-		unsigned int modelLoc = glGetUniformLocation(brickShader.ID, "model");
-		unsigned int viewLoc = glGetUniformLocation(brickShader.ID, "view");
+		//// gets the matrix uniform locations
+		//unsigned int modelLoc = glGetUniformLocation(brickShader.ID, "model");
+		//unsigned int viewLoc = glGetUniformLocation(brickShader.ID, "view");
 
 		// pass the uniforms to the shaders 
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+		//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
-		brickShader.setMat4("projection", projection);
+		//brickShader.setMat4("projection", projection);
 
 		// DRAW CALL
-		glBindVertexArray(VAO);/*
+		/*glBindVertexArray(VAO);
 		for (unsigned int i = 0; i < 20; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
@@ -242,36 +266,28 @@ int main() {
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}*/
 
-		lightShader.use();
-		lightShader.setMat4("projection", projection);
-		lightShader.setMat4("view", view);
-		lightShader.setVec3("ourColor", lightColor);
+		//lightShader.use();
+		//lightShader.setMat4("projection", projection);
+		//lightShader.setMat4("view", view);
+		//lightShader.setVec3("ourColor", lightColor);
+
+		//glm::mat4 model = glm::mat4(1.0f);
+		//model = glm::translate(model, lightPosition);
+		//model = glm::rotate(model, glm::radians(1.00f), (glm::vec3(0.5f, 1.0f, 0.0f) * deltaTime));
+		//model = glm::scale(model, glm::vec3(1));
+		//lightShader.setMat4("model", model);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		//lightShader.setVec3("lightPos", lightPosition);
+		//lightShader.setVec3("lightColor", lightColor);
+
 
 		
-
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPosition);
-		model = glm::rotate(model, glm::radians(1.00f), (glm::vec3(0.5f, 1.0f, 0.0f) * deltaTime));
-		model = glm::scale(model, glm::vec3(1));
-		lightShader.setMat4("model", model);
-
-		lightShader.setVec3("lightPos", lightPosition);
-		lightShader.setVec3("lightColor", lightColor);
-
-		ourShader.use();/*
-		ourShader.setMat4("projection", projection);
-		ourShader.setMat4("view", view);*/
-
-		glm::mat4 model2 = glm::mat4(1.0f);
-		model2 = glm::translate(model2, glm::vec3(0.0f, 0.0f, 0.0f));
-		model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));
-		ourShader.setMat4("model2", model);
-
-		backpackModel.draw(ourShader);
+		
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		
 
 
 		ImGui_ImplGlfw_NewFrame();
