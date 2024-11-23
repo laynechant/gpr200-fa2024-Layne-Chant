@@ -66,119 +66,30 @@ int main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	float vertices[] = {
-	-0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-	 0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
-	-0.5f,  0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
-
-	-0.5f, -0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
-	-0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
-
-	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-	-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-	-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-	 0.5f,  0.5f,  0.5f, 1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-	 0.5f,  0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f, 1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f, 1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
-
-	-0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-	 0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
-	 0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-	 0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
-	-0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
-	-0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
-
-	-0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
-	 0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
-	 0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-	 0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
-	-0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
-	-0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f
-	};
-
-	unsigned int indices[] =
-	{
-		 0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
-	};
-
-	glm::vec3 cubePositions[20];
-	float cubePosRange = 10.0f; 
-	for (int i = 0; i < 20; i++)
-	{
-		cubePositions[i] = glm::vec3(ew::RandomRange(-cubePosRange, cubePosRange), ew::RandomRange(-cubePosRange, cubePosRange), ew::RandomRange(-cubePosRange, cubePosRange));
-	}
-
-	glm::vec3 cubeAngles[20];
-	for (int i = 0; i < 20; i++)
-	{
-		cubeAngles[i] = glm::vec3(glm::radians(ew::RandomRange(-0.0, 360.0f)), glm::radians(ew::RandomRange(-0.0, 360.0f)), glm::radians(ew::RandomRange(-0.0, 360.0f)));
-	}
 	
-	//Initialization goes here!
-	unsigned int VAO, VBO, EBO;
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	glGenBuffers(1, &EBO);
-	glGenBuffers(1, &VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// Position (XYZ)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	 //Color RGBA
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	//glEnable(GL_TEXTURE_2D);
-
-	shaderFile::Texture2D brick("assets/wall.jpg", GL_LINEAR, GL_REPEAT);
-	unsigned int brickTexture = brick.GetID();
-
 	// creates the shader object
-	shaderFile::Shader brickShader("assets/vertexShader.vert", "assets/fragmentShader.frag");
+	//shaderFile::Shader brickShader("assets/vertexShader.vert", "assets/fragmentShader.frag");
 	shaderFile::Shader lightShader("assets/vertexShaderLight.vert", "assets/fragmentShaderLight.frag");
 
+	// load the shaders for the object
 	shaderFile::Shader ourShader("assets/modelLoading.vert", "assets/modelLoading.frag");
 
+	// make sure the model isnt upside down
 	stbi_set_flip_vertically_on_load(true);
 
+	// loads the object
 	ShaderFile::Model backpackModel("assets/backpack.obj");
 	
 	// defining the projection matrix
 	glm::mat4 projection;
 	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
-	
-	int timeLocation = glGetUniformLocation(brickShader.ID, "uTime");
-	int ambientLocation = glGetUniformLocation(brickShader.ID, "ambientStrength");
-	int diffLocation = glGetUniformLocation(brickShader.ID, "diffStrength"); 
-	int specularLocation = glGetUniformLocation(brickShader.ID, "specularStrength");
-	int shininessLocation = glGetUniformLocation(brickShader.ID, "shininess");
+	//// uniform variables
+	//int timeLocation = glGetUniformLocation(brickShader.ID, "uTime");
+	//int ambientLocation = glGetUniformLocation(brickShader.ID, "ambientStrength");
+	//int diffLocation = glGetUniformLocation(brickShader.ID, "diffStrength"); 
+	//int specularLocation = glGetUniformLocation(brickShader.ID, "specularStrength");
+	//int shininessLocation = glGetUniformLocation(brickShader.ID, "shininess");
 
 	glm::vec3 lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -203,48 +114,36 @@ int main() {
 
 		// update the time
 		float time = (float)glfwGetTime();
-		brickShader.use();
+		//brickShader.use();
 
-		glUniform1f(timeLocation, time);
-		glUniform1f(ambientLocation, ambientStrength);
-		glUniform1f(diffLocation, diffStrength);
-		glUniform1f(specularLocation, specularStrength);
-		glUniform1f(shininessLocation, shininess);;
+		//glUniform1f(timeLocation, time);
+		//glUniform1f(ambientLocation, ambientStrength);
+		//glUniform1f(diffLocation, diffStrength);
+		//glUniform1f(specularLocation, specularStrength);
+		//glUniform1f(shininessLocation, shininess);;
 
-		brickShader.setVec3("lightPos", lightPosition);
-		brickShader.setVec3("lightColor", lightColor);
-
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, brickTexture);
-
-		glm::mat4 view = camera.GetViewMatrix();
-		//brickShader.setMat4("view", view);
-
+		//brickShader.setVec3("lightPos", lightPosition);
+		//brickShader.setVec3("lightColor", lightColor);
 		
 		ourShader.use();
-		// creats the transforms 
-		glm::mat4 projection = glm::mat4(1.0f);
 
 		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();\
 
-		
+		//glm::mat4 modelProjection;
+		//modelProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
-		ourShader.setMat4("prjection", projection);
+		ourShader.setMat4("projection", projection);
 		//glm::mat4 view = camera.GetViewMatrix();
 		ourShader.setMat4("view", view);
 
-		glm::mat4 model2 = glm::mat4(1.0f);
-		model2 = glm::translate(model2, glm::vec3(0.0f, 0.0f, 0.0f));
-		model2 = glm::scale(model2, glm::vec3(1.0f, 1.0f, 1.0f));
-		ourShader.setMat4("model2", model2);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+		ourShader.setMat4("model", model);
 
 		backpackModel.draw(ourShader);
 
-		glm::mat4 modelProjection;
-		modelProjection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
-		
-	
 		//// gets the matrix uniform locations
 		//unsigned int modelLoc = glGetUniformLocation(brickShader.ID, "model");
 		//unsigned int viewLoc = glGetUniformLocation(brickShader.ID, "view");
@@ -252,44 +151,21 @@ int main() {
 		// pass the uniforms to the shaders 
 		//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
-		//brickShader.setMat4("projection", projection);
-
-		// DRAW CALL
-		/*glBindVertexArray(VAO);
-		for (unsigned int i = 0; i < 20; i++)
-		{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), (cubeAngles[i] + glm::vec3(0.5f, 1.0f, 0.0f)) * deltaTime);
-			 
-			brickShader.setMat4("model", model);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}*/
-
-		//lightShader.use();
-		//lightShader.setMat4("projection", projection);
-		//lightShader.setMat4("view", view);
-		//lightShader.setVec3("ourColor", lightColor);
+		lightShader.use();
+		lightShader.setMat4("projection", projection);
+		lightShader.setMat4("view", view);
+		lightShader.setVec3("ourColor", lightColor);
 
 		//glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, lightPosition);
-		//model = glm::rotate(model, glm::radians(1.00f), (glm::vec3(0.5f, 1.0f, 0.0f) * deltaTime));
-		//model = glm::scale(model, glm::vec3(1));
-		//lightShader.setMat4("model", model);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		model = glm::translate(model, lightPosition);
+		model = glm::rotate(model, glm::radians(1.00f), (glm::vec3(0.5f, 1.0f, 0.0f) * deltaTime));
+		model = glm::scale(model, glm::vec3(1));
+		lightShader.setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		//lightShader.setVec3("lightPos", lightPosition);
-		//lightShader.setVec3("lightColor", lightColor);
-
-
+		lightShader.setVec3("lightPos", lightPosition);
+		lightShader.setVec3("lightColor", lightColor);
 		
-		
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		
-
-
 		ImGui_ImplGlfw_NewFrame();
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui::NewFrame();
