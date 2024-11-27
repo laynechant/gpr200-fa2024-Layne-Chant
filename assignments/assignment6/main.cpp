@@ -225,6 +225,7 @@ int main() {
 		glUniform1f(diffLocation, diffStrength);
 		glUniform1f(specularLocation, specularStrength);
 		glUniform1f(shininessLocation, shininess);;
+<<<<<<< HEAD
 
 		brickShader.setVec3("lightPos", lightPosition);
 		brickShader.setVec3("lightColor", lightColor);
@@ -232,6 +233,15 @@ int main() {
 		//glActiveTexture(GL_TEXTURE0);
 		//glBindTexture(GL_TEXTURE_2D, brickTexture);
 
+=======
+
+		brickShader.setVec3("lightPos", lightPosition);
+		brickShader.setVec3("lightColor", lightColor);
+
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, brickTexture);
+
+>>>>>>> parent of 52a905a... Finished implementing Model loading
 		glm::mat4 view = camera.GetViewMatrix();
 		//brickShader.setMat4("view", view);
 
