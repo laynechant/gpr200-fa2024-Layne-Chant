@@ -19,6 +19,7 @@
 #include <Shader File/texture2D.h>
 #include <Shader File/camera.h>
 #include <Shader File/model.h>
+#include <Shader File/particleSystem.h>
 
 using namespace std; 
 
@@ -29,6 +30,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
+const int MAX_PARTICLES = 750;
 
 shaderFile::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f; 
@@ -100,17 +102,30 @@ int main() {
 	float specularStrength = 0.5f;
 	float shininess = 512.0f;
 
+	ParticleSystem particleSystem(1000);
+
 	while (!glfwWindowShouldClose(window)) {
-		
 		float currentFrame = static_cast<float>(glfwGetTime());
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		processInput(window);
-		
-		//Clear framebuffer
+
+		// Clear framebuffer
 		glClearColor(0.0f, 0.5f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Spawn a particle every frame
+		glm::vec2 spawnPosition(0.0f, 0.0f); // Example: center of the screen
+		glm::vec2 randomVelocity(((float)rand() / RAND_MAX) * 2.0f - 1.0f, ((float)rand() / RAND_MAX) * 2.0f - 1.0f);
+		glm::vec4 randomColor(((float)rand() / RAND_MAX), ((float)rand() / RAND_MAX), ((float)rand() / RAND_MAX), 1.0f);
+		float lifetime = 2.0f;
+
+		particleSystem.SpawnParticle(spawnPosition, randomVelocity, randomColor, lifetime);
+
+		// Update and render particles
+		particleSystem.Update(deltaTime);
+		particleSystem.Render();
 
 		// update the time
 		float time = (float)glfwGetTime();
