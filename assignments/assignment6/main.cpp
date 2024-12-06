@@ -28,6 +28,8 @@ void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
+void createSnowSpawners(int amount, float height);
+
 const int SCREEN_WIDTH = 1080;
 const int SCREEN_HEIGHT = 720;
 const int MAX_PARTICLES = 500;
@@ -39,6 +41,14 @@ bool firstMouse = true;
 
 float deltaTime = 0.0f; // time between current frame and last frame
 float lastFrame = 0.0f;
+
+void createSnowSpawners(int amount, float height)
+{
+    //glm::vec2();
+
+
+};
+
 
 
 int main() {
@@ -89,7 +99,7 @@ int main() {
 
     ShaderFile::Model backpackModel("assets/backpack.obj");
     shaderFile::Texture2D snowflakeTexture("assets/snowflake.png", GL_LINEAR, GL_REPEAT, true);
-    snowflakeTexture.Bind();
+    //snowflakeTexture.Bind();
    
 
 
@@ -113,6 +123,8 @@ int main() {
     float diffStrength = 1.0f;
     float specularStrength = 0.5f;
     float shininess = 512.0f;
+
+    
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -143,6 +155,7 @@ int main() {
         ourShader.setMat4("view", view);
         ourShader.setMat4("model", model);
        //backpackModel.draw(ourShader);
+        particleSystem.emitParticle(ParticleType::SNOW);
 
         // Render the GUI
         ImGui_ImplGlfw_NewFrame();
@@ -150,11 +163,11 @@ int main() {
         ImGui::NewFrame();
 
         ImGui::Begin("Settings");
+
         ImGui::Text("Particle System");
         //ImGui::DragFloat3("Emitter Position", &particleSystem.emitterPosition.x, 0.1f);
         if (ImGui::Button("Emit Particle"))
 {
-            particleSystem.EmitParticle();
         }
         ImGui::End();
 
