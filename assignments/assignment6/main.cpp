@@ -20,6 +20,7 @@
 #include <Shader File/camera.h>
 #include <Shader File/model.h>
 #include <Shader File/particleSystem.h>
+#include <Shader File/cubemap.h>
 
 using namespace std;
 
@@ -91,14 +92,83 @@ int main() {
     // Load the shaders for the object
     shaderFile::Shader ourShader("assets/modelLoading.vert", "assets/modelLoading.frag");
     shaderFile::Shader particleShader("assets/particleShader.vert", "assets/particleShader.frag");
+    shaderFile::Shader skyBoxShader("assets/cubeMapShader.vert", "assets/cubeMapShader.frag");
 
     // Make sure the model isnt upside down
     stbi_set_flip_vertically_on_load(true);
+
+
+    float skyboxVertices[] = {
+        // positions          
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+    };
+
+    unsigned int skyboxVAO, skyboxVBO; 
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+    // load textures
+    vector<std::string> faces
+    {
+        "assets/skybox/posx.jpg",
+        "assets/skybox/negx.jpg",
+        "assets/skybox/posy.jpg",
+        "assets/skybox/negy.jpg",
+        "assets/skybox/posz.jpg",
+        "assets/skybox/negz.jpg"
+    };
+    ShaderFile::Cubemap cubeMapTexture = ShaderFile::Cubemap(faces);
 
    // Load the object
 
     ShaderFile::Model backpackModel("assets/backpack.obj");
     shaderFile::Texture2D snowflakeTexture("assets/snowflake.png", GL_LINEAR, GL_REPEAT, true);
+    
     //snowflakeTexture.Bind();
    
 
@@ -124,7 +194,6 @@ int main() {
     float specularStrength = 0.5f;
     float shininess = 512.0f;
 
-    
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -156,6 +225,19 @@ int main() {
         ourShader.setMat4("model", model);
        //backpackModel.draw(ourShader);
         particleSystem.emitParticle(ParticleType::SNOW);
+
+
+        glDepthMask(GL_FALSE);
+        skyBoxShader.use();
+        view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+        skyBoxShader.setMat4("view", view);
+        skyBoxShader.setMat4("projection", projection);
+
+        // set view and projection matrix
+        glBindVertexArray(skyboxVAO);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture.GetID());
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDepthMask(GL_TRUE);
 
         // Render the GUI
         ImGui_ImplGlfw_NewFrame();
