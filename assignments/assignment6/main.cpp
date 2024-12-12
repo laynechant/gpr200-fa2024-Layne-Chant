@@ -166,14 +166,17 @@ int main() {
 
    // Load the object
 
-    ShaderFile::Model backpackModel("assets/backpack.obj");
-    shaderFile::Texture2D snowflakeTexture("assets/snowflake.png", GL_LINEAR, GL_REPEAT, true);
+
+    ShaderFile::Model backpackModel("assets/Cabin.obj");
+
+  
+    shaderFile::Texture2D snowflakeTexture("assets/TexturesCom_WoodLogs0019_4_XL.jpg", GL_LINEAR, GL_MIRRORED_REPEAT, true);
     
     //snowflakeTexture.Bind();
    
 
-
-    ParticleSystem particleSystem(750, particleShader, glm::vec3(0.0f, 0.0f, 0.0f), snowflakeTexture.GetID());
+    //ParticleSystem particleSystem(750, particleShader, glm::vec3(0.0f, 0.0f, 0.0f), snowflakeTexture.GetID());
+    
     // Define the projection matrix
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
@@ -194,6 +197,20 @@ int main() {
     float specularStrength = 0.5f;
     float shininess = 512.0f;
 
+    // adjusts the rotation and position of the cabin
+    glm::mat4 model = glm::mat4(1.0f);
+
+    glm::vec3 position = glm::vec3(-4.0f, -5.5f, -15.0f);
+    model = glm::translate(model, position);
+
+    float angle = glm::radians(88.0f);
+    glm::vec3 axis = glm::vec3(0.0f, 6.0f, 0.0f); // rotates around the x axis
+
+    
+    model = glm::rotate(model, angle, axis);
+   
+    unsigned int modelLoc = glGetUniformLocation(ourShader.ID, "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -209,36 +226,44 @@ int main() {
         // Process input events
         processInput(window);
         // Update the particle system
-        particleSystem.update(deltaTime);
+        //particleSystem.update(deltaTime);
 
         // Set up the view/projection matrices
-        glm::mat4 view = camera.GetViewMatrix();
-        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 skyboxView = camera.GetViewMatrix();
+        
 
         // Render the particles
-        particleSystem.render(view, projection);
+        //particleSystem.render(view, projection);
 
         // Render the other objects
-        ourShader.use();
-        ourShader.setMat4("projection", projection);
-        ourShader.setMat4("view", view);
-        ourShader.setMat4("model", model);
-       //backpackModel.draw(ourShader);
-        particleSystem.emitParticle(ParticleType::SNOW);
-
+        //particleSystem.emitParticle(ParticleType::SNOW);
 
         glDepthMask(GL_FALSE);
         skyBoxShader.use();
-        view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
-        skyBoxShader.setMat4("view", view);
+
+        skyboxView = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+        skyBoxShader.setMat4("view", skyboxView);
         skyBoxShader.setMat4("projection", projection);
 
-        // set view and projection matrix
+        // set view and projection matrix for the cube map
         glBindVertexArray(skyboxVAO);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubeMapTexture.GetID());
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glDepthMask(GL_TRUE);
 
+        glEnable(GL_DEPTH_TEST);
+        ourShader.use();
+        glm::mat4 view = camera.GetViewMatrix();
+
+
+        ourShader.setMat4("projection", projection);
+        ourShader.setMat4("view", view);
+        ourShader.setMat4("model", model);
+
+
+        backpackModel.draw(ourShader);
+        //glDepthMask(GL_FALSE);
+        
         // Render the GUI
         ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
