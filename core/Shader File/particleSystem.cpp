@@ -1,5 +1,8 @@
 #include "particleSystem.h"
+#include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
 
+<<<<<<< HEAD
 
 // Constructor
 ParticleSystem::ParticleSystem(unsigned int maxParticles)
@@ -60,3 +63,5 @@ void ParticleSystem::SpawnParticle(const glm::vec2& position,
         }
     }
 }
+=======
+>>>>>>> Drew
