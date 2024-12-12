@@ -190,7 +190,8 @@ int main() {
 	float diffStrength = 1.0f;
 	float specularStrength = 0.5f;
 	float shininess = 512.0f;
-
+	float rimcut = 0.1f;
+	float threshold = 5.4f;
 	ParticleSystem particleSystem(1000);
 
 	while (!glfwWindowShouldClose(window)) {
@@ -225,7 +226,7 @@ int main() {
 		glUniform1f(diffLocation, diffStrength);
 		glUniform1f(specularLocation, specularStrength);
 		glUniform1f(shininessLocation, shininess);;
-<<<<<<< HEAD
+
 
 		brickShader.setVec3("lightPos", lightPosition);
 		brickShader.setVec3("lightColor", lightColor);
@@ -233,15 +234,16 @@ int main() {
 		//glActiveTexture(GL_TEXTURE0);
 		//glBindTexture(GL_TEXTURE_2D, brickTexture);
 
-=======
+
 
 		brickShader.setVec3("lightPos", lightPosition);
 		brickShader.setVec3("lightColor", lightColor);
-
+		brickShader.setFloat("rimcut", rimcut);
+		brickShader.setFloat("rimThreshold", threshold);
 		//glActiveTexture(GL_TEXTURE0);
 		//glBindTexture(GL_TEXTURE_2D, brickTexture);
 
->>>>>>> parent of 52a905a... Finished implementing Model loading
+
 		glm::mat4 view = camera.GetViewMatrix();
 		//brickShader.setMat4("view", view);
 
@@ -251,7 +253,8 @@ int main() {
 		glm::mat4 projection = glm::mat4(1.0f);
 
 		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
+		//for cel shading
+		
 		
 
 		ourShader.setMat4("prjection", projection);
@@ -271,16 +274,16 @@ int main() {
 		
 	
 		//// gets the matrix uniform locations
-		//unsigned int modelLoc = glGetUniformLocation(brickShader.ID, "model");
-		//unsigned int viewLoc = glGetUniformLocation(brickShader.ID, "view");
+		unsigned int modelLoc = glGetUniformLocation(brickShader.ID, "model");
+		unsigned int viewLoc = glGetUniformLocation(brickShader.ID, "view");
 
 		// pass the uniforms to the shaders 
-		//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
 
-		//brickShader.setMat4("projection", projection);
+		brickShader.setMat4("projection", projection);
 
 		// DRAW CALL
-		/*glBindVertexArray(VAO);
+		glBindVertexArray(VAO);
 		for (unsigned int i = 0; i < 20; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
@@ -289,29 +292,29 @@ int main() {
 			 
 			brickShader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}*/
+		}
 
-		//lightShader.use();
-		//lightShader.setMat4("projection", projection);
-		//lightShader.setMat4("view", view);
-		//lightShader.setVec3("ourColor", lightColor);
+		lightShader.use();
+		lightShader.setMat4("projection", projection);
+		lightShader.setMat4("view", view);
+		lightShader.setVec3("ourColor", lightColor);
 
-		//glm::mat4 model = glm::mat4(1.0f);
-		//model = glm::translate(model, lightPosition);
-		//model = glm::rotate(model, glm::radians(1.00f), (glm::vec3(0.5f, 1.0f, 0.0f) * deltaTime));
-		//model = glm::scale(model, glm::vec3(1));
-		//lightShader.setMat4("model", model);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, lightPosition);
+		model = glm::rotate(model, glm::radians(1.00f), (glm::vec3(0.5f, 1.0f, 0.0f) * deltaTime));
+		model = glm::scale(model, glm::vec3(1));
+		lightShader.setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		//lightShader.setVec3("lightPos", lightPosition);
-		//lightShader.setVec3("lightColor", lightColor);
+		lightShader.setVec3("lightPos", lightPosition);
+		lightShader.setVec3("lightColor", lightColor);
 
 
 		
 		
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 
 
@@ -327,6 +330,9 @@ int main() {
 		ImGui::SliderFloat("Diffuse K", &diffStrength, 0.0f, 1.0f);
 		ImGui::SliderFloat("Specular K", &specularStrength, 0.0f, 1.0f);
 		ImGui::SliderFloat("Shininess", &shininess, 2.0f, 1024.0f);
+		ImGui::SliderFloat("rimcut", &rimcut, 0.0f, 1.0f);
+		ImGui::SliderFloat("rimThreshold", &threshold, 0.1f, 1.1f);
+
 		ImGui::End();
 
 		ImGui::Render();

@@ -31,17 +31,17 @@ void ParticleSystem::Update(float deltaTime) {
 void ParticleSystem::Render() {
     // Use OpenGL to render particles
     // For simplicity, we'll assume you're rendering points (or small quads) with colors
-    glBegin(GL_POINTS); // Use GL_QUADS for textured quads if needed
+   // glBegin(GL_POINTS); // Use GL_QUADS for textured quads if needed
 
     for (const Particle& particle : Particles) {
         if (particle.Lifetime > 0.0f) {
             // Set color and position of the particle
-            glColor4f(particle.Color.r, particle.Color.g, particle.Color.b, particle.Color.a);
-            glVertex2f(particle.Position.x, particle.Position.y);
+           // glColor4f(particle.Color.r, particle.Color.g, particle.Color.b, particle.Color.a);
+           // glVertex2f(particle.Position.x, particle.Position.y);
         }
     }
 
-    glEnd();
+   // glEnd();
 }
 
 // Spawn a new particle

@@ -174,7 +174,6 @@ int main() {
 	float diffStrength = 1.0f;
 	float specularStrength = 0.5f;
 	float shininess = 512.0f;
-
 	while (!glfwWindowShouldClose(window)) {
 		
 		float currentFrame = static_cast<float>(glfwGetTime());
@@ -199,7 +198,6 @@ int main() {
 
 		brickShader.setVec3("lightPos", lightPosition);
 		brickShader.setVec3("lightColor", lightColor);
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, brickTexture);
 
@@ -231,11 +229,13 @@ int main() {
 			brickShader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
-
+		glm::vec3 lightThresholds(0.3f, 0.6f, 0.9f);
 		lightShader.use();
 		lightShader.setMat4("projection", projection);
 		lightShader.setMat4("view", view);
 		lightShader.setVec3("ourColor", lightColor);
+		
+
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPosition);
