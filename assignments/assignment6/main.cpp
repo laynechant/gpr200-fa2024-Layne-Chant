@@ -30,8 +30,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 
-const int SCREEN_WIDTH = 1080;
-const int SCREEN_HEIGHT = 720;
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
 
 shaderFile::Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCREEN_WIDTH / 2.0f;
@@ -51,7 +51,7 @@ int main() {
     }
 
     // Create a window
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Final Project", NULL, NULL);
     if (window == NULL) {
         printf("GLFW failed to create window\n");
         return 1;
@@ -158,15 +158,13 @@ int main() {
 
 
     // Load the object
+    ShaderFile::Model cabinModel("assets/Cabin.obj");
+    shaderFile::Texture2D cabinTexture("assets/TexturesCom_WoodLogs0019_4_XL.jpg", GL_LINEAR, GL_CLAMP_TO_EDGE, false);
 
-
-    ShaderFile::Model backpackModel("assets/Cabin.obj");
-
-
-    shaderFile::Texture2D snowflakeTexture("assets/TexturesCom_WoodLogs0019_4_XL.jpg", GL_LINEAR, GL_MIRRORED_REPEAT, true);
 	shaderFile::Texture2D particleTexture("assets/lightcookie.jpg", GL_LINEAR, GL_CLAMP_TO_EDGE, true);
     
 	ParticleSystem particleSystem(particleShader, particleTexture.GetID());
+
 
     // Define the projection matrix
     glm::mat4 projection;
@@ -189,7 +187,6 @@ int main() {
 
     float angle = glm::radians(88.0f);
     glm::vec3 axis = glm::vec3(0.0f, 6.0f, 0.0f); // rotates around the x axis
-
 
     model = glm::rotate(model, angle, axis);
 
@@ -215,8 +212,6 @@ int main() {
         // Set up the view/projection matrices
         glm::mat4 view = camera.GetViewMatrix();
 
-
-
         // Render the other objects
         //particleSystem.emitParticle(ParticleType::SNOW);
 
@@ -233,21 +228,24 @@ int main() {
         
         glDepthMask(GL_TRUE);
 
-        particleSystem.Update(deltaTime, camera.Position);
-        // Render the particles
-        particleSystem.Render(view, projection, camera.Position);
-     /*   ourShader.use();
-
-
+        ourShader.use();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
         ourShader.setMat4("model", model);
 
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, cabinTexture.GetID());
+        ourShader.setInt("texture_diffuse", 0);
 
+        cabinModel.draw(ourShader);
+        glDepthMask(GL_FALSE);
 
+        particleSystem.Update(deltaTime, camera.Position);
+        // Render the particles
+        particleSystem.Render(view, projection, camera.Position);
 
-            backpackModel.draw(ourShader);
-            glDepthMask(GL_FALSE);*/
+        glDepthFunc(GL_LESS);   // Restore standard depth function
+        glDepthMask(GL_TRUE);   // Re-enable depth writing
 
             //// Render the GUI
             //ImGui_ImplGlfw_NewFrame();
@@ -263,8 +261,6 @@ int main() {
         return 0;
     }
     
-
-
     // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
     void processInput(GLFWwindow* window)
     {
