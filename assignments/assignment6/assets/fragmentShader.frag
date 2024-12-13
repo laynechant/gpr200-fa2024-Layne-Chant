@@ -34,6 +34,7 @@ vec3 norm = normalize(Normal);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffuse = diff * lightColor;
+	//this is for cel shading unfortately it only would work on assigment 5
 	 float intensity = dot(lightDir,normalize(Normal));
    vec4 color; 
     if (intensity > 0.95)
@@ -62,6 +63,6 @@ vec3 norm = normalize(Normal);
     float rimShadow = smoothstep(0.0,1.0,(intensity * 0.5) / rimcut + 0.5);
 	result = mix(vec3(0.2) * texColor.rgb, result * texColor.rgb, rimShadow);
 	
-	FragColor =  vec4 (result * texColor.rgb, 1.0);
+	FragColor = vec4 (result * texColor.rgb, 1.0);
 };
 

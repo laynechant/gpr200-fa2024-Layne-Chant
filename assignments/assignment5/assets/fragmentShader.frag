@@ -14,8 +14,8 @@ uniform float ambientStrength;
 uniform float diffStrength;
 uniform float shininess;
 uniform sampler2D ourTexture;
-uniform float rimThreshold; 
-uniform float rimcut; 
+//uniform float rimThreshold; 
+//uniform float rimcut; 
 uniform vec3 objectColor;
 uniform vec3 lightColor;
 uniform vec3 lightPos;
@@ -43,12 +43,22 @@ void main()
 	vec3 halfwayDir = normalize(lightDir + viewDir);
 	vec3 reflectDir = reflect(-lightDir, norm);
 	float spec = pow(max(dot(norm, halfwayDir), 0.0), 1025 - shininess);
-	
+	float intensity = dot(lightDir,normalize(Normal));
+	//this is cel shading code example that would of been in the house. 
+   vec4 color; 
+    if (intensity > 0.5)
+      color = vec4(1.0,1.0,1.0,1.0);
+  else if (intensity > 0)
+      color = vec4(0.33,0.33,0.33,1.0);
 	vec3 specular = specularStrength * lightColor * spec; 
-	vec3 result = (ambient + diffuse + specular ) * texColor.rgb;
+	//vec3 result = (ambient + diffuse + specular ) * texColor.rgb;
+
 	
-	 //vec3 result = lighting * texColor.rgb * objectColor; 
+	 
+	FragColor =  color * texColor;
+
 	
-	FragColor = vec4(result, 1.0);
+	
+//vec3 result = lighting * texColor.rgb * objectColor; 
 
 }

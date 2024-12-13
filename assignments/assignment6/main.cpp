@@ -89,7 +89,54 @@ int main() {
 
     // Make sure the model isnt upside down
     stbi_set_flip_vertically_on_load(true);
+    float vertices[] = {
+     -0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+      0.5f,  0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+     -0.5f,  0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
 
+     -0.5f, -0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+      0.5f, -0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+     -0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+
+     -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+     -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+     -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+
+      0.5f,  0.5f,  0.5f, 1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+      0.5f, -0.5f,  0.5f, 1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+      0.5f,  0.5f,  0.5f, 1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+
+     -0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+      0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+      0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+      0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+     -0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+     -0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+
+     -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+      0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+     -0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+     -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f,  0.0f, 1.0f
+    };
+    unsigned int indices[] =
+    {
+         0, 1, 3, // first triangle
+        1, 2, 3  // second triangle
+    };
     float skyboxVertices[] = {
         // positions          
         -1.0f,  1.0f, -1.0f,
@@ -143,6 +190,33 @@ int main() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //Initialization goes here!
+    glm::vec3 cubePositions[20];
+    glm::vec3 cubeAngles[20]; 
+    float cubePosRange = 10.0f; 
+    unsigned int VAO, VBO, EBO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glGenBuffers(1, &EBO);
+    glGenBuffers(1, &VBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // Position (XYZ)
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // Color RGBA
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     // load textures
     vector<std::string> faces
@@ -169,7 +243,11 @@ int main() {
     // Define the projection matrix
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-
+    int timeLocation = glGetUniformLocation(brickShader.ID, "uTime");
+    int ambientLocation = glGetUniformLocation(brickShader.ID, "ambientStrength");
+    int diffLocation = glGetUniformLocation(brickShader.ID, "diffStrength");
+    int specularLocation = glGetUniformLocation(brickShader.ID, "specularStrength");
+    int shininessLocation = glGetUniformLocation(brickShader.ID, "shininess");
     glm::vec3 lightPosition = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -178,6 +256,9 @@ int main() {
     float diffStrength = 1.0f;
     float specularStrength = 0.5f;
     float shininess = 512.0f;
+    //to put the rims inside of the main.cpp to connect it with the glm. 
+    float rimcut = 0.1f;
+    float threshold = 5.4f;
 
     // adjusts the rotation and position of the cabin
     glm::mat4 model = glm::mat4(1.0f);
@@ -232,6 +313,25 @@ int main() {
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
         ourShader.setMat4("model", model);
+        ourShader.setVec3("lightPos", lightPosition);
+        ourShader.setVec3("lightColor", lightColor);
+        ourShader.setFloat("rimcut,", rimcut);
+        ourShader.setFloat("rimThreshold", threshold);
+        
+        
+        brickShader.setVec3("lightPos", lightPosition);
+        brickShader.setVec3("lightColor", lightColor);
+        brickShader.setVec3("lightPos", lightPosition);
+		brickShader.setVec3("lightColor", lightColor);
+		glActiveTexture(GL_TEXTURE0);
+        unsigned int modelLoc = glGetUniformLocation(brickShader.ID, "model");
+        unsigned int viewLoc = glGetUniformLocation(brickShader.ID, "view");
+        
+        //This setFloat is for placing cel shading 
+       
+        brickShader.setFloat("rimcut", rimcut);
+        brickShader.setFloat("rimThreshold", threshold);
+       
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, cabinTexture.GetID());
@@ -243,16 +343,57 @@ int main() {
         particleSystem.Update(deltaTime, camera.Position);
         // Render the particles
         particleSystem.Render(view, projection, camera.Position);
+        // DRAW CALL
+        glBindVertexArray(VAO);
+        /*for (unsigned int i = 0; i < 20; i++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, cubePositions[i]);
+            model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), (cubeAngles[i] + glm::vec3(0.5f, 1.0f, 0.0f)) * deltaTime);
+
+            brickShader.setMat4("model", model);
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }*/
+        glm::vec3 lightThresholds(0.3f, 0.6f, 0.9f);
+        lightShader.use();
+        lightShader.setMat4("projection", projection);
+        lightShader.setMat4("view", view);
+        lightShader.setVec3("ourColor", lightColor);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPosition);
+        model = glm::rotate(model, glm::radians(1.00f), (glm::vec3(0.5f, 1.0f, 0.0f) * deltaTime));
+        model = glm::scale(model, glm::vec3(1));
+        lightShader.setMat4("model", model);
+        lightShader.setVec3("lightPos", lightPosition);
+        lightShader.setVec3("lightColor", lightColor);
 
         glDepthFunc(GL_LESS);   // Restore standard depth function
         glDepthMask(GL_TRUE);   // Re-enable depth writing
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
             //// Render the GUI
-            //ImGui_ImplGlfw_NewFrame();
-            //ImGui_ImplOpenGL3_NewFrame();
-            //ImGui::NewFrame();
+            ImGui_ImplGlfw_NewFrame();
+            ImGui_ImplOpenGL3_NewFrame();
+            ImGui::NewFrame();
+            ImGui::Begin("Settings");
+            ImGui::Text("Controls");
+            ImGui::DragFloat3("Light Position", &lightPosition.x, 0.1f);
+            ImGui::ColorEdit3("Light Color", &lightColor.r);
+            ImGui::SliderFloat("Ambient K", &ambientStrength, 0.0f, 1.0f);
+            ImGui::SliderFloat("Diffuse K", &diffStrength, 0.0f, 1.0f);
+            ImGui::SliderFloat("Specular K", &specularStrength, 0.0f, 1.0f);
+            ImGui::SliderFloat("Shininess", &shininess, 2.0f, 1024.0f);
+            ImGui::SliderFloat("rimcut", &rimcut, 0.0f, 1.0f);
+            ImGui::SliderFloat("rimThreshold", &threshold, 1.0f, 6.1f);
+            //ImGui::Render();
+            ImGui::End();
 
-
+            // Render ImGui
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             glfwSwapBuffers(window);
             glfwPollEvents();
         }
